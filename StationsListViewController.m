@@ -59,6 +59,10 @@
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
+    MapViewController *mapVC = segue.destinationViewController;
+    NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
+    
+    [mapVC setInitialValues:self.stationListArray[selectedIndexPath.row]];
     
 }
 

@@ -10,4 +10,6 @@
 
 @interface MapViewController : UIViewController
 
+- (void)setInitialValues:(NSDictionary *)stationDictionary;
+
 @end
