@@ -8,11 +8,13 @@
 
 #import "MapViewController.h"
 #import <MapKit/MapKit.h>
+@import CoreLocation;
 
 @interface MapViewController ()
 @property NSDictionary *stationDictionary;
 
 @property (strong, nonatomic) IBOutlet MKMapView *mapView;
+@property CLLocationManager *locationManager;
 
 @end
 
@@ -22,7 +24,11 @@
 {
     [super viewDidLoad];
     [self zoomToBikeLocation];
-    // Do any additional setup after loading the view.
+    self.locationManager = [[CLLocationManager alloc] init];
+    [self.locationManager requestAlwaysAuthorization];
+
+
+    [self.mapView setShowsUserLocation:YES];
 }
 
 - (void)setInitialValues:(NSDictionary *)stationDictionary
@@ -40,8 +46,8 @@
     [self pinBikeLocation:coord]; //pins bike location
     
     MKCoordinateSpan coordinateSpan; //sets coordinate span / zooms to user
-    coordinateSpan.latitudeDelta = .05;
-    coordinateSpan.longitudeDelta = .05;
+    coordinateSpan.latitudeDelta = .5;
+    coordinateSpan.longitudeDelta = .5;
     MKCoordinateRegion region = MKCoordinateRegionMake(coord, coordinateSpan);
     [self.mapView setRegion:region];
     
@@ -62,6 +68,10 @@
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation
 {
 
+    if([annotation isEqual:[mapView userLocation]]) //checks to see if annotation is user location
+    {
+        return nil;
+    }
     //sets pin image and callout
     MKPinAnnotationView *pin = [[MKPinAnnotationView alloc]initWithAnnotation:annotation reuseIdentifier:nil];
     pin.image = [UIImage imageNamed:@"bikeImage"] ;
